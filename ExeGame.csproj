@@ -63,15 +63,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\AnimationController.cs" />
-    <Compile Include="Assets\CharacterPhysics.cs" />
-    <Compile Include="Assets\FocusPlayer.cs" />
+    <Compile Include="Assets\Scripts\AnimationController.cs" />
+    <Compile Include="Assets\Scripts\CharacterPhysics.cs" />
+    <Compile Include="Assets\Scripts\Cloud.cs" />
+    <Compile Include="Assets\Scripts\Coin.cs" />
+    <Compile Include="Assets\Scripts\FocusPlayer.cs" />
+    <Compile Include="Assets\Scripts\Gumba.cs" />
+    <Compile Include="Assets\Scripts\MapManager.cs" />
+    <Compile Include="Assets\Scripts\Mushroom.cs" />
+    <Compile Include="Assets\Scripts\Princess.cs" />
+    <Compile Include="Assets\Scripts\ResponsiveEntity.cs" />
+    <Compile Include="Assets\Scripts\Shader.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
-    <Compile Include="Assets\Shader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\cam_CRT.shader" />
+    <None Include="Assets\Shaders\cam_CRT_lines.shader" />
     <None Include="Assets\Shaders\cam_Earthquake.shader" />
+    <None Include="Assets\Shaders\cam_pixels.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
