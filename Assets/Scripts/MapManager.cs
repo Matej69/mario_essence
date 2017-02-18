@@ -42,11 +42,12 @@ public class MapManager : MonoBehaviour {
 
     public List<TextureIDPair> mapTextures = new List<TextureIDPair>();
     public List<ColorGameObjectPair> colorObjectPair = new List<ColorGameObjectPair>();
-    
+
+    List<GameObject> entities = new List<GameObject>();
+
     public Transform mapSpawnPos;
 
-    const float tileSize = 1;
-    
+    const float tileSize = 1;   
 
 
 
@@ -55,12 +56,16 @@ public class MapManager : MonoBehaviour {
 
         SpawnEntities(E_MAP_ID.START_MAP);
 
+        CameraShader cam = FindObjectOfType<CameraShader>();
+        cam.SetEntityShader(CameraShader.E_ENTITY_SHADER_ID.BLACK_SILUET, E_ENTITY_ID.PRINCESS);
+
     }
 	
 	// Update is called once per frame
 	void Update () {
-        	
-	}
+                
+
+    }
 
 
 
@@ -79,8 +84,10 @@ public class MapManager : MonoBehaviour {
                 GameObject prefab = GetPrefab(pixels[(i * w) + j]);
                 //Vector3 pos = new Vector3(mapSpawnPos.position.x + (tileSize * j), mapSpawnPos.position.y + (tileSize * i), 0);
                 Vector3 pos = new Vector3(mapSpawnPos.position.x + (tileSize * j), mapSpawnPos.position.y + (tileSize * i), 0);
-                if (prefab != null)                
-                    Instantiate(prefab, pos, Quaternion.identity);                
+                if (prefab != null) {                
+                    GameObject newEntity = (GameObject)Instantiate(prefab, pos, Quaternion.identity);
+                    entities.Add(newEntity);
+                }                
             }
         }
     }
@@ -106,9 +113,40 @@ public class MapManager : MonoBehaviour {
         Debug.LogError("COLOR+ "+ _color +"IS NOT CONNECTED TO ANY GAME OBJECT");
         return null;
     }
+
+    public GameObject GetPrefab(E_ENTITY_ID _id) {
+        foreach (ColorGameObjectPair pair in colorObjectPair) { 
+            if (pair.id == _id)
+                return pair.entity;            
+        }
+        Debug.LogError("CAN NOT GET ENTITY WITH ID : + "+ _id);
+        return null;
+    }
+
     
+    public List<GameObject> GetEntities(E_ENTITY_ID _entityID) {
+        List<GameObject> targetedEntities = new List<GameObject>();
+        foreach (GameObject go in entities)
+            if (go!= null && go.GetComponent<ResponsiveEntity>() != null && go.GetComponent<ResponsiveEntity>().id == _entityID)
+                targetedEntities.Add(go);
+
+        if(targetedEntities.Count == 0)
+            Debug.LogError("LIST OF ENTITIES WITH ID = "+ _entityID + " IS EMPTY= ");
+
+        return targetedEntities;
+    }
 
     //************HANDLERS************
+    public void RemoveFromList(ref GameObject _objToRemove) {
+        for(int i = 0; i < entities.Count; ++i) {
+            if (entities[i].gameObject == _objToRemove)
+                entities.Remove(_objToRemove);
+        }
+    }
+
+    public void AddToList(ref GameObject _go) {
+        entities.Add(_go);
+    }
 
 
 }

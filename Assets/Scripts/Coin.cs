@@ -3,15 +3,15 @@ using System.Collections;
 
 public class Coin : ResponsiveEntity{ 
     
-    bool pickedUp = false;
+    public bool pickedUp = false;
     float vertSpeed = 1;
     float opacityReduceSpeed = 2;
     
 
     // Use this for initialization
     void Start () {
-	
-	}
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -21,16 +21,23 @@ public class Coin : ResponsiveEntity{
             col.a -= opacityReduceSpeed * Time.deltaTime;
             tran.y += vertSpeed * Time.deltaTime;
             GetComponent<SpriteRenderer>().color = col;
-            transform.position = tran;
+            transform.position = tran; 
 
             if (col.a <= 0)
                 Destroy(gameObject);
         }	
 	}
     
-    public override void OnMarioTouched(ref GameObject mario) {
+    public override void OnMarioTouchedTop(ref GameObject mario) {
         pickedUp = true;
     }
+    public override void OnMarioTouchedBot(ref GameObject mario) {
+        pickedUp = true;
+    }
+    public override void OnMarioTouchedHor(ref GameObject mario) {
+        pickedUp = true;
+    }
+
     
 
 }

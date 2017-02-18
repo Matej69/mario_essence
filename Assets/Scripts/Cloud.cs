@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Cloud : MonoBehaviour {
+public class Cloud : ResponsiveEntity {
 
 	// Use this for initialization
 	void Start () {

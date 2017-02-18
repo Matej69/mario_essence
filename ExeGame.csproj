@@ -63,7 +63,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Brick.cs" />
+    <Compile Include="Assets\Ground.cs" />
+    <Compile Include="Assets\ItemBlock.cs" />
+    <Compile Include="Assets\NormalBlock.cs" />
+    <Compile Include="Assets\Pipe.cs" />
     <Compile Include="Assets\Scripts\AnimationController.cs" />
+    <Compile Include="Assets\Scripts\CameraShader.cs" />
     <Compile Include="Assets\Scripts\CharacterPhysics.cs" />
     <Compile Include="Assets\Scripts\Cloud.cs" />
     <Compile Include="Assets\Scripts\Coin.cs" />
@@ -73,13 +79,12 @@
     <Compile Include="Assets\Scripts\Mushroom.cs" />
     <Compile Include="Assets\Scripts\Princess.cs" />
     <Compile Include="Assets\Scripts\ResponsiveEntity.cs" />
-    <Compile Include="Assets\Scripts\Shader.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\cam_CRT_lines.shader" />
     <None Include="Assets\Shaders\cam_Earthquake.shader" />
-    <None Include="Assets\Shaders\cam_pixels.shader" />
+    <None Include="Assets\Shaders\entity_siluet.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

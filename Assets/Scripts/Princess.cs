@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Princess : MonoBehaviour {
+public class Princess : ResponsiveEntity {
 
 	// Use this for initialization
 	void Start () {

@@ -9,8 +9,6 @@ public class CharacterPhysics : MonoBehaviour {
         RIGHT,
         SIZE
     }
-
-    bool grounded = false;
     
     public enum E_ANIM_STATE {
         IDLE,
@@ -18,6 +16,8 @@ public class CharacterPhysics : MonoBehaviour {
         RUN,
         DIE
     }
+
+    bool grounded = false;
 
     [HideInInspector]
     public Vector2 velocity = new Vector2(0, 0);
@@ -56,19 +56,19 @@ public class CharacterPhysics : MonoBehaviour {
 	void Update () {
 
         //applying some values to velocity
-        if(!isDeath)
+        if (!isDeath) { 
             ChangeStateOnInput();
-        ApplyHorizontalVelocity();
+            ApplyHorizontalVelocity();
+        }
         ApplyGravity();
         //checking should playr move by those values using restrictions such as collision        
         VerticalRaycast();
         HorizontalRaycast();
         //applying final velocity to player position
-        if (!isDeath)
-            ApplyMovement();
+        
+        ApplyMovement();
 
         HandleSpriteRotation();
-
         ApplyAnimation();
     }
 
@@ -195,20 +195,37 @@ public class CharacterPhysics : MonoBehaviour {
         }
 
         //OTHER ENTITIES COLLISION
-        for(int i = 0; i < startRayPoint.Length; ++i) {
-            Transform point = startRayPoint[i];
-            RaycastHit2D ray = Physics2D.Raycast(new Vector2(point.position.x, point.position.y - skin * dir), Vector3.up * dir, Mathf.Abs(velY), m_entity);
-            if (ray) {
-                ResponsiveEntity entityScript = ray.collider.gameObject.GetComponent<ResponsiveEntity>();
-                if (entityScript) {
-                    GameObject go = gameObject;
-                    entityScript.OnMarioTouched(ref go);
-                    entityScript.OnMarioTouchedVert(ref go);
+        float rayLength = 0.1f;
+        for(int i = 0; i < 2; ++i) {
+            Transform[] entityStartPoints = (i == 0) ? topRayPoints : botRayPoints;
+            int rayDir = (i == 0) ? 1 : -1;
+            for (int j = 0; j < entityStartPoints.Length; ++j) {            
+                Transform point = entityStartPoints[j];
+                RaycastHit2D ray = Physics2D.Raycast(new Vector2(point.position.x, point.position.y + rayLength * rayDir), Vector3.up * rayDir, Mathf.Abs(rayLength), m_entity);
+                if (ray) {
+                    ResponsiveEntity entityScript = ray.collider.gameObject.GetComponent<ResponsiveEntity>();
+                    if (entityScript) {
+                        GameObject mario = gameObject;                    
+                        if(rayDir == 1)
+                            entityScript.OnMarioTouched(ResponsiveEntity.E_MARIO_TOUCHED.BOT, ref mario);
+                        if (rayDir == -1)
+                            entityScript.OnMarioTouched(ResponsiveEntity.E_MARIO_TOUCHED.TOP, ref mario);
+                    }
+                }
+                //EXCEPTION FOR COIN BLOCK BECOUSE IT IS SUPOSE TO HAVE PLATFORM AND ENTITY LAYER IN ONE
+                RaycastHit2D rayCoinBlock = Physics2D.Raycast(new Vector2(point.position.x, point.position.y + rayLength * rayDir), Vector3.up * rayDir, Mathf.Abs(rayLength), m_platform);
+                 if (rayCoinBlock) {
+                    ResponsiveEntity entityScript = rayCoinBlock.collider.gameObject.GetComponent<ResponsiveEntity>();                    
+                    if (entityScript) {
+                        GameObject mario = gameObject;                                      
+                        if(rayDir == 1 && entityScript.id == MapManager.E_ENTITY_ID.BLOCK_COIN)
+                            entityScript.OnMarioTouched(ResponsiveEntity.E_MARIO_TOUCHED.BOT, ref mario);
+                    }
                 }
             }
         }
 
-
+    
 
 
     }
@@ -223,11 +240,7 @@ public class CharacterPhysics : MonoBehaviour {
         float yOffest = 0.05f;
         float velX = velocity.x * Time.deltaTime;
         int dirX = (velX > 0 || velX < 0) ? (int)Mathf.Sign(velX) : 0;
-        
-        if (dirX == 0) {
-            return;
-       }
-
+       
         Transform[] startRayPoint = (dirX == 1) ? rightRayPoints : leftRayPoints ;
 
         if(movementState == E_MOVE_STATE.RIGHT || movementState == E_MOVE_STATE.LEFT) { 
@@ -246,15 +259,19 @@ public class CharacterPhysics : MonoBehaviour {
 
 
         //OTHER ENTITIES COLLISION
-        for(int i = 0; i < startRayPoint.Length; ++i) {
-            Transform point = startRayPoint[i];
-            RaycastHit2D ray = Physics2D.Raycast(new Vector2(point.position.x, point.position.y - skin * dirX), Vector3.up * dirX, Mathf.Abs(velX), m_entity);
-            if (ray) {
-                ResponsiveEntity entityScript = ray.collider.gameObject.GetComponent<ResponsiveEntity>();
-                if (entityScript) {
-                    GameObject go = gameObject;
-                    entityScript.OnMarioTouched(ref go);
-                    entityScript.OnMarioTouchedHor(ref go);
+        float rayLength = 0.02f;
+        for(int i = 0; i < 2; ++i) {
+            Transform[] entityStartPoints = (i == 0) ? rightRayPoints : leftRayPoints;
+            int rayDir = (i == 0) ? 1 : -1;
+            for (int j = 0; j < entityStartPoints.Length; ++j) {            
+                Transform point = entityStartPoints[j];
+                RaycastHit2D ray = Physics2D.Raycast(new Vector2(point.position.x + rayLength * rayDir, point.position.y), Vector3.right * rayDir, Mathf.Abs(rayLength), m_entity);
+                if (ray) {
+                    ResponsiveEntity entityScript = ray.collider.gameObject.GetComponent<ResponsiveEntity>();
+                    if (entityScript) {
+                        GameObject mario = gameObject;                    
+                        entityScript.OnMarioTouched(ResponsiveEntity.E_MARIO_TOUCHED.HOR, ref mario);
+                    }
                 }
             }
         }
