@@ -43,6 +43,8 @@ public class CharacterPhysics : MonoBehaviour {
     public Animator animator;
     E_ANIM_STATE animState = E_ANIM_STATE.IDLE;
 
+    public MapManager.E_ENTITY_ID id;
+
     public GameObject MarioSprite;
 
     public bool isDeath = false;

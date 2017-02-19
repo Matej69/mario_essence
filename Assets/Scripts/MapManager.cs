@@ -44,6 +44,7 @@ public class MapManager : MonoBehaviour {
     public List<ColorGameObjectPair> colorObjectPair = new List<ColorGameObjectPair>();
 
     List<GameObject> entities = new List<GameObject>();
+    [HideInInspector] GameObject marioRefrence;
 
     public Transform mapSpawnPos;
 
@@ -57,8 +58,7 @@ public class MapManager : MonoBehaviour {
         SpawnEntities(E_MAP_ID.START_MAP);
 
         CameraShader cam = FindObjectOfType<CameraShader>();
-        cam.SetEntityShader(CameraShader.E_ENTITY_SHADER_ID.BLACK_SILUET, E_ENTITY_ID.PRINCESS);
-
+        cam.SetEntityShader(CameraShader.E_ENTITY_SHADER_ID.GHOST, E_ENTITY_ID.PRINCESS);
     }
 	
 	// Update is called once per frame
@@ -84,12 +84,14 @@ public class MapManager : MonoBehaviour {
                 GameObject prefab = GetPrefab(pixels[(i * w) + j]);
                 //Vector3 pos = new Vector3(mapSpawnPos.position.x + (tileSize * j), mapSpawnPos.position.y + (tileSize * i), 0);
                 Vector3 pos = new Vector3(mapSpawnPos.position.x + (tileSize * j), mapSpawnPos.position.y + (tileSize * i), 0);
-                if (prefab != null) {                
+                if (prefab != null) {        
                     GameObject newEntity = (GameObject)Instantiate(prefab, pos, Quaternion.identity);
                     entities.Add(newEntity);
                 }                
             }
         }
+        //GET MARIO REFRENCE
+        marioRefrence = FindObjectOfType<CharacterPhysics>().gameObject;
     }
 
 
@@ -126,9 +128,18 @@ public class MapManager : MonoBehaviour {
     
     public List<GameObject> GetEntities(E_ENTITY_ID _entityID) {
         List<GameObject> targetedEntities = new List<GameObject>();
-        foreach (GameObject go in entities)
-            if (go!= null && go.GetComponent<ResponsiveEntity>() != null && go.GetComponent<ResponsiveEntity>().id == _entityID)
-                targetedEntities.Add(go);
+        foreach (GameObject go in entities) {
+            if(_entityID != E_ENTITY_ID.MARIO) {  
+                if (go!= null && go.GetComponent<ResponsiveEntity>() != null && go.GetComponent<ResponsiveEntity>().id == _entityID)
+                    targetedEntities.Add(go);
+                }
+            else {
+                GameObject marioSprite = marioRefrence.GetComponent<CharacterPhysics>().MarioSprite;
+                targetedEntities.Add(marioSprite);
+            }
+            
+                
+        }
 
         if(targetedEntities.Count == 0)
             Debug.LogError("LIST OF ENTITIES WITH ID = "+ _entityID + " IS EMPTY= ");

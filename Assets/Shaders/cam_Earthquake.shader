@@ -3,6 +3,7 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+		_CRTLines("CRT Texture", 2D) = "white" {}
 	}
 	SubShader
 	{
@@ -38,16 +39,23 @@
 			}
 			
 			sampler2D _MainTex;
+			sampler2D _CRTLines;
 
-			fixed4 frag (v2f IN) : SV_Target
+			fixed4 frag (v2f i) : SV_Target
 			{
 				//IN.vertex.y
-				float2 finalPos = IN.uv - float2(0,sin(IN.uv.x + _Time[1] * 80 )/100);
-
+				float2 finalPos = i.uv - float2(0,sin(i.uv.x + _Time[1] * 80 )/100);
 
 				fixed4 col = tex2D(_MainTex, finalPos);
 
-				// COLORS
+				//CRT LINES........................
+				fixed4 lines = tex2D(_CRTLines, i.uv);
+				if (lines.a == 1) {
+					col.r -= 0.1f;
+					col.g -= 0.1f;
+					col.b -= 0.1f;
+				}
+				//.................................
 
 				return col;
 			}

@@ -1,4 +1,4 @@
-﻿Shader "Entity/entity_siluet"
+﻿Shader "Entity/siluet"
 {
 	Properties
 	{

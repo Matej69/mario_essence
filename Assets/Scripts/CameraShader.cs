@@ -19,8 +19,8 @@ public class CameraShader : MonoBehaviour {
     public enum E_CAM_MATERIAL_ID {
         CRT,
         EARTQUAKE,
-        SIN,
-        NOCTURNO,
+        TAN,
+        GLITCHED,
         SIZE
     }
 
@@ -28,7 +28,9 @@ public class CameraShader : MonoBehaviour {
         NORMAL,
         BLACK_SILUET,
         GLITCHED_SMALL,
-        GLITCHED_BIG
+        GLITCHED_BIG,
+        GHOST,
+        EYE
     }
     [Space] 
     public List<MaterialEnumIDPair_cam> cameraMaterials;
@@ -87,11 +89,14 @@ public class CameraShader : MonoBehaviour {
 
     public void SetEntityShader(E_ENTITY_SHADER_ID _shaderID, MapManager.E_ENTITY_ID _entityID) {
         MapManager mapManager = FindObjectOfType<MapManager>();
-
-        entitiesUnderShader.AddRange(mapManager.GetEntities(_entityID));
-
-        foreach (GameObject entity in entitiesUnderShader)
+        List<GameObject> objectsToShadered = null;
+        
+        objectsToShadered = mapManager.GetEntities(_entityID);
+        foreach (GameObject entity in objectsToShadered)
             entity.GetComponent<Renderer>().material = GetEntityMaterial(_shaderID);
+        
+
+        entitiesUnderShader.AddRange(objectsToShadered);
     }
 
 
@@ -107,8 +112,12 @@ public class CameraShader : MonoBehaviour {
 
 
     public void ResetEntityShaders() {
-        foreach (GameObject entity in entitiesUnderShader)
+        foreach (GameObject entity in entitiesUnderShader) {
             entity.GetComponent<Renderer>().material = GetEntityMaterial(E_ENTITY_SHADER_ID.NORMAL);
+        }
+
+
+
 
     }
     

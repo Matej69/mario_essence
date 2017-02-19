@@ -44,14 +44,18 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 lines = tex2D(_CRTLines,i.uv);
-
+				
 				fixed4 col = tex2D(_MainTex, i.uv);
+
+				//CRT LINES........................
+				fixed4 lines = tex2D(_CRTLines,i.uv);
 				if (lines.a == 1) {
 					col.r -= 0.1f;
 					col.g -= 0.1f;
 					col.b -= 0.1f;
 				}
+				//.................................
+
 				return col;
 			}
 			ENDCG

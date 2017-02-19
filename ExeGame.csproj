@@ -84,6 +84,10 @@
   <ItemGroup>
     <None Include="Assets\Shaders\cam_CRT_lines.shader" />
     <None Include="Assets\Shaders\cam_Earthquake.shader" />
+    <None Include="Assets\Shaders\cam_TanSlow.shader" />
+    <None Include="Assets\Shaders\entity_eye.shader" />
+    <None Include="Assets\Shaders\entity_ghost.shader" />
+    <None Include="Assets\Shaders\entity_glitch.shader" />
     <None Include="Assets\Shaders\entity_siluet.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
