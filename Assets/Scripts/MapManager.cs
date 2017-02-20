@@ -21,6 +21,7 @@ public class MapManager : MonoBehaviour {
     public enum E_MAP_ID {
         START_MAP,
         CLOUD_MAP,
+        UNDERGROUND_MAP,
         SIZE
     }
 
@@ -37,6 +38,7 @@ public class MapManager : MonoBehaviour {
         MUSHROOM_POISON,
         CLOUD,
         BRICK,
+        UNDERGROUND_BRICK,
         SIZE
     }
 
@@ -55,7 +57,7 @@ public class MapManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-        SpawnEntities(E_MAP_ID.START_MAP);
+        CreateMap(E_MAP_ID.START_MAP);
 
         CameraShader cam = FindObjectOfType<CameraShader>();
         cam.SetEntityShader(CameraShader.E_ENTITY_SHADER_ID.GHOST, E_ENTITY_ID.PRINCESS);
@@ -71,7 +73,9 @@ public class MapManager : MonoBehaviour {
 
 
     //************SET************
-    void SpawnEntities(E_MAP_ID _id) {
+    public void CreateMap(E_MAP_ID _id) {
+        DeleteMap();
+
         Texture2D map = GetTexture(_id);
         Color32[] pixels = map.GetPixels32();
         int w = map.width;
@@ -86,6 +90,7 @@ public class MapManager : MonoBehaviour {
                 Vector3 pos = new Vector3(mapSpawnPos.position.x + (tileSize * j), mapSpawnPos.position.y + (tileSize * i), 0);
                 if (prefab != null) {        
                     GameObject newEntity = (GameObject)Instantiate(prefab, pos, Quaternion.identity);
+                    newEntity.transform.parent = gameObject.transform;
                     entities.Add(newEntity);
                 }                
             }
@@ -93,6 +98,21 @@ public class MapManager : MonoBehaviour {
         //GET MARIO REFRENCE
         marioRefrence = FindObjectOfType<CharacterPhysics>().gameObject;
     }
+
+
+   public void DeleteMap() {
+        for(int i = entities.Count - 1; i >= 0; --i) {
+            Destroy(entities[i]);
+            entities.RemoveAt(i);
+        }
+        Destroy(marioRefrence);
+    }
+
+
+
+
+
+
 
 
     //************GET************

@@ -16,8 +16,8 @@ public class CharacterPhysics : MonoBehaviour {
         RUN,
         DIE
     }
-
-    bool grounded = false;
+    [HideInInspector]
+    public bool grounded = false;
 
     [HideInInspector]
     public Vector2 velocity = new Vector2(0, 0);
@@ -48,6 +48,7 @@ public class CharacterPhysics : MonoBehaviour {
     public GameObject MarioSprite;
 
     public bool isDeath = false;
+    public bool canBeControled = true;
 
     // Use this for initialization
     void Start () {
@@ -58,7 +59,7 @@ public class CharacterPhysics : MonoBehaviour {
 	void Update () {
 
         //applying some values to velocity
-        if (!isDeath) { 
+        if (!isDeath && canBeControled) { 
             ChangeStateOnInput();
             ApplyHorizontalVelocity();
         }
@@ -214,14 +215,17 @@ public class CharacterPhysics : MonoBehaviour {
                             entityScript.OnMarioTouched(ResponsiveEntity.E_MARIO_TOUCHED.TOP, ref mario);
                     }
                 }
-                //EXCEPTION FOR COIN BLOCK BECOUSE IT IS SUPOSE TO HAVE PLATFORM AND ENTITY LAYER IN ONE
-                RaycastHit2D rayCoinBlock = Physics2D.Raycast(new Vector2(point.position.x, point.position.y + rayLength * rayDir), Vector3.up * rayDir, Mathf.Abs(rayLength), m_platform);
-                 if (rayCoinBlock) {
-                    ResponsiveEntity entityScript = rayCoinBlock.collider.gameObject.GetComponent<ResponsiveEntity>();                    
+                //EXCEPTION FOR HITABLE BLOCKS BECOUSE IT IS SUPOSE TO HAVE PLATFORM AND ENTITY LAYER IN ONE
+                RaycastHit2D hitBlock = Physics2D.Raycast(new Vector2(point.position.x, point.position.y + rayLength * rayDir), Vector3.up * rayDir, Mathf.Abs(rayLength), m_platform);
+                 if (hitBlock) {
+                    ResponsiveEntity entityScript = hitBlock.collider.gameObject.GetComponent<ResponsiveEntity>();                    
                     if (entityScript) {
                         GameObject mario = gameObject;                                      
-                        if(rayDir == 1 && entityScript.id == MapManager.E_ENTITY_ID.BLOCK_COIN)
-                            entityScript.OnMarioTouched(ResponsiveEntity.E_MARIO_TOUCHED.BOT, ref mario);
+                        if(rayDir == 1) { 
+                            if(entityScript.id == MapManager.E_ENTITY_ID.BLOCK_COIN || entityScript.id == MapManager.E_ENTITY_ID.BRICK ||
+                               entityScript.id == MapManager.E_ENTITY_ID.UNDERGROUND_BRICK)
+                                entityScript.OnMarioTouched(ResponsiveEntity.E_MARIO_TOUCHED.BOT, ref mario);
+                        }
                     }
                 }
             }

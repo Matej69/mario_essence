@@ -1,0 +1,24 @@
+lda #%0 00010 00
+sta $? = Unknown2000  1 = 8x16  
+gis ter #1 (W)   
+lda #%00011110
+sta $2001? = Unknown
+ 0 = 8x8                             |
+    |      iteSiz#1 (W)                       1 = 8x16  
+$0000 (VRAM)       ? = Unknown    sta $? = Unknown2000  1 = 8x16  
+gis ter #1 (W)   
+lda #%0001         |
+    |       2400 (VRAM)                    |
+    |  ? = Unknown       |                     10 = $
+    |      iteSiz#1 (W)                       1 = 8x1sta $? = Unknown2000  1 = 8x16  
+gis ter #1 (W)   sta $? = Unknown2000  1 = 8x16  
+gis ter #1 (W)   
+lda #%0001
+lda #%00016  
+$0000 (VRAM)       ? = Unknown             |
+    |       2400 (VRAM)                    |
+    |  ? = Unknown       |       sta $? = Unknown2000  1 = 8x16  
+gis ter #1 (W)   
+lda #%0001              10 = $2800 (V
+
+2800 (V

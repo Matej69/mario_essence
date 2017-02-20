@@ -18,8 +18,12 @@ public class FocusPlayer : MonoBehaviour {
 	void Update () {
         camPos = transform.position;
 
-        LerpTo(Mario.transform.position);
+        if (!Mario && FindObjectOfType<CharacterPhysics>())
+            Mario = FindObjectOfType<CharacterPhysics>();
+        if (!Mario)
+            return;
 
+        LerpTo(Mario.transform.position);
         transform.position = new Vector3(camPos.x, camPos.y, transform.position.z);
     }
 

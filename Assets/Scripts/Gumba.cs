@@ -52,7 +52,7 @@ public class Gumba : ResponsiveEntity {
             state = E_GUMBA_STATE.DAMAGED;
         }
         else if (state == E_GUMBA_STATE.DAMAGED) {
-            mario.GetComponent<CharacterPhysics>().velocity.y = 15;
+            mario.GetComponent<CharacterPhysics>().velocity.y = 16;
             renderer.sprite = deadSprite;
             state = E_GUMBA_STATE.DEAD;
         }
