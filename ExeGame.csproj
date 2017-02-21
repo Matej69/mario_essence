@@ -63,13 +63,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\ErrorScreen.cs" />
+    <Compile Include="Assets\PrincessCorpse.cs" />
     <Compile Include="Assets\Scripts\AnimationController.cs" />
     <Compile Include="Assets\Scripts\Brick.cs" />
     <Compile Include="Assets\Scripts\CameraShader.cs" />
     <Compile Include="Assets\Scripts\CharacterPhysics.cs" />
     <Compile Include="Assets\Scripts\Cloud.cs" />
     <Compile Include="Assets\Scripts\Coin.cs" />
+    <Compile Include="Assets\Scripts\ErrorScreen.cs" />
     <Compile Include="Assets\Scripts\FocusPlayer.cs" />
     <Compile Include="Assets\Scripts\Ground.cs" />
     <Compile Include="Assets\Scripts\Gumba.cs" />

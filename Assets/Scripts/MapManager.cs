@@ -39,8 +39,23 @@ public class MapManager : MonoBehaviour {
         CLOUD,
         BRICK,
         UNDERGROUND_BRICK,
+        PRINCESS_CORPSE,
         SIZE
     }
+
+    //*************MAP EVENTS INFO***************
+    E_MAP_ID currentMap = E_MAP_ID.START_MAP;
+    public enum E_PRINCESS_STATE {
+        ALIVE,
+        DYING,
+        DEAD
+    }
+    [HideInInspector]
+    public E_PRINCESS_STATE princessState = E_PRINCESS_STATE.ALIVE;
+    public int princessDeathSpriteID = 1;
+    int coinsCollected = 0;
+    int gumbasKilled = 0;
+    //*******************************************
 
     public List<TextureIDPair> mapTextures = new List<TextureIDPair>();
     public List<ColorGameObjectPair> colorObjectPair = new List<ColorGameObjectPair>();
@@ -49,7 +64,7 @@ public class MapManager : MonoBehaviour {
     [HideInInspector] GameObject marioRefrence;
 
     public Transform mapSpawnPos;
-
+       
     const float tileSize = 1;   
 
 
@@ -65,7 +80,8 @@ public class MapManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-                
+
+        HandleOnMarioDead();
 
     }
 
@@ -75,6 +91,9 @@ public class MapManager : MonoBehaviour {
     //************SET************
     public void CreateMap(E_MAP_ID _id) {
         DeleteMap();
+        currentMap = _id;
+
+        Camera.main.transform.position = new Vector3(0, 5, Camera.main.transform.position.z);
 
         Texture2D map = GetTexture(_id);
         Color32[] pixels = map.GetPixels32();
@@ -177,6 +196,14 @@ public class MapManager : MonoBehaviour {
 
     public void AddToList(ref GameObject _go) {
         entities.Add(_go);
+    }
+
+    public void HandleOnMarioDead() {
+        if (marioRefrence == null)
+            return;
+
+        if(marioRefrence.transform.position.y < - 3)
+            CreateMap(currentMap);
     }
 
 

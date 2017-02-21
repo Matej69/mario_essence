@@ -63,7 +63,9 @@ public class Pipe : ResponsiveEntity {
             (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && mario.grounded)
         {
             MarioSprite.GetComponent<SpriteRenderer>().sortingLayerName = "BackgroundEntities";
-            MarioSprite.transform.parent.GetComponent<CharacterPhysics>().canBeControled = false;
+            CharacterPhysics marioScr = MarioSprite.transform.parent.GetComponent<CharacterPhysics>();
+            marioScr.canBeControled = false;
+            marioScr.SetVelocity(new Vector2(0, 0));
             goingThroughPipe = true;
         } 
     }

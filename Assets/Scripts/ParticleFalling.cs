@@ -8,7 +8,7 @@ public class ParticleFalling : MonoBehaviour {
     Vector2 velocity;
     float grav = 0.45f;
 
-    float timePassed;
+    float timePassed = 0;
 
     // Use this for initialization
     void Start()
@@ -17,15 +17,14 @@ public class ParticleFalling : MonoBehaviour {
         rotVelocity = new Vector3(0, 0, (float)Random.Range(2000, 5000) / 10);
         ChangeDirectionX((Random.Range(0, 2) == 0) ? 1 : -1);
         ChangeRotationZ((Random.Range(0, 2) == 0) ? 1 : -1);
-
-        timePassed = Time.time;
+        
     }
 
     // Update is called once per frame
     void Update() {
 
         timePassed += Time.deltaTime;
-        if (Time.time - timePassed > 4)
+        if (timePassed > 2)
             Destroy(gameObject);
 
         ApplyRotation();
