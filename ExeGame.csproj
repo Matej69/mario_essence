@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\EssenceJumpscare.cs" />
     <Compile Include="Assets\PrincessCorpse.cs" />
     <Compile Include="Assets\Scripts\AnimationController.cs" />
     <Compile Include="Assets\Scripts\Brick.cs" />
@@ -94,11 +95,13 @@
     <None Include="Assets\Resources\WEIRD_ERROR.txt" />
     <None Include="Assets\Shaders\cam_CRT_lines.shader" />
     <None Include="Assets\Shaders\cam_Earthquake.shader" />
+    <None Include="Assets\Shaders\cam_Nocturno.shader" />
     <None Include="Assets\Shaders\cam_TanSlow.shader" />
     <None Include="Assets\Shaders\entity_eye.shader" />
     <None Include="Assets\Shaders\entity_ghost.shader" />
     <None Include="Assets\Shaders\entity_glitch.shader" />
     <None Include="Assets\Shaders\entity_siluet.shader" />
+    <None Include="Assets\Shaders\glitched_white.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

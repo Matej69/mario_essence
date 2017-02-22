@@ -34,9 +34,6 @@
 			{
 				v2f o;
 				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
-
-				o.vertex.y += _Time[1] * 0.035f;
-
 				o.uv = v.uv;
 				return o;
 			}
@@ -45,7 +42,7 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				float Xchanged = sin(_Time[1] * i.vertex.y / 60) / 80;
+				float Xchanged = sin(_Time[1] * i.vertex.y / 30) / 80;
 				fixed4 col = tex2D(_MainTex, i.uv + float2(Xchanged,0));
 				
 				if (col.a != 0) {

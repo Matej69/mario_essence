@@ -21,6 +21,7 @@ public class CameraShader : MonoBehaviour {
         EARTQUAKE,
         TAN,
         GLITCHED,
+        NOCTURNO,
         SIZE
     }
 
@@ -30,6 +31,7 @@ public class CameraShader : MonoBehaviour {
         GLITCHED_SMALL,
         GLITCHED_BIG,
         GHOST,
+        GLITCHED_WHITE,
         EYE
     }
     [Space] 
@@ -113,8 +115,10 @@ public class CameraShader : MonoBehaviour {
 
     public void ResetEntityShaders() {
         foreach (GameObject entity in entitiesUnderShader) {
-            entity.GetComponent<Renderer>().material = GetEntityMaterial(E_ENTITY_SHADER_ID.NORMAL);
+            if(entity != null)
+                entity.GetComponent<Renderer>().material = GetEntityMaterial(E_ENTITY_SHADER_ID.NORMAL);
         }
+        entitiesUnderShader.Clear();
 
 
 

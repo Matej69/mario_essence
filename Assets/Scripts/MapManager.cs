@@ -44,7 +44,7 @@ public class MapManager : MonoBehaviour {
     }
 
     //*************MAP EVENTS INFO***************
-    E_MAP_ID currentMap = E_MAP_ID.START_MAP;
+    public E_MAP_ID currentMap = E_MAP_ID.START_MAP;
     public enum E_PRINCESS_STATE {
         ALIVE,
         DYING,
@@ -61,21 +61,21 @@ public class MapManager : MonoBehaviour {
     public List<ColorGameObjectPair> colorObjectPair = new List<ColorGameObjectPair>();
 
     List<GameObject> entities = new List<GameObject>();
-    [HideInInspector] GameObject marioRefrence;
+    [HideInInspector] public GameObject marioRefrence;
 
     public Transform mapSpawnPos;
        
-    const float tileSize = 1;   
+    const float tileSize = 1;
+
+    CameraShader cameraShader;
 
 
 
     // Use this for initialization
     void Start () {
+        cameraShader = FindObjectOfType<CameraShader>();
 
         CreateMap(E_MAP_ID.START_MAP);
-
-        CameraShader cam = FindObjectOfType<CameraShader>();
-        cam.SetEntityShader(CameraShader.E_ENTITY_SHADER_ID.GHOST, E_ENTITY_ID.PRINCESS);
     }
 	
 	// Update is called once per frame
@@ -91,6 +91,7 @@ public class MapManager : MonoBehaviour {
     //************SET************
     public void CreateMap(E_MAP_ID _id) {
         DeleteMap();
+        cameraShader.ResetEntityShaders();
         currentMap = _id;
 
         Camera.main.transform.position = new Vector3(0, 5, Camera.main.transform.position.z);

@@ -18,6 +18,7 @@ public class CharacterPhysics : MonoBehaviour {
     }
     [HideInInspector]
     public bool grounded = false;
+    public bool canRun = false;
 
     [HideInInspector]
     public Vector2 velocity = new Vector2(0, 0);
@@ -299,7 +300,7 @@ public class CharacterPhysics : MonoBehaviour {
             animState = E_ANIM_STATE.WALK;
             SetAnimatorState(E_ANIM_STATE.WALK);
             }
-        if (Input.GetKey(KeyCode.LeftShift) && movementState != E_MOVE_STATE.STILL) {
+        if (Input.GetKey(KeyCode.LeftShift) && canRun && movementState != E_MOVE_STATE.STILL) {
             animState = E_ANIM_STATE.RUN;
             SetAnimatorState(E_ANIM_STATE.RUN);
         }            
