@@ -63,25 +63,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\EssenceJumpscare.cs" />
-    <Compile Include="Assets\PrincessCorpse.cs" />
     <Compile Include="Assets\Scripts\AnimationController.cs" />
+    <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Brick.cs" />
     <Compile Include="Assets\Scripts\CameraShader.cs" />
-    <Compile Include="Assets\Scripts\CharacterPhysics.cs" />
     <Compile Include="Assets\Scripts\Cloud.cs" />
     <Compile Include="Assets\Scripts\Coin.cs" />
     <Compile Include="Assets\Scripts\ErrorScreen.cs" />
+    <Compile Include="Assets\Scripts\EssenceJumpscare.cs" />
     <Compile Include="Assets\Scripts\FocusPlayer.cs" />
     <Compile Include="Assets\Scripts\Ground.cs" />
     <Compile Include="Assets\Scripts\Gumba.cs" />
     <Compile Include="Assets\Scripts\ItemBlock.cs" />
     <Compile Include="Assets\Scripts\MapManager.cs" />
+    <Compile Include="Assets\Scripts\Mario.cs" />
     <Compile Include="Assets\Scripts\Mushroom.cs" />
     <Compile Include="Assets\Scripts\NormalBlock.cs" />
     <Compile Include="Assets\Scripts\ParticleFalling.cs" />
     <Compile Include="Assets\Scripts\Pipe.cs" />
     <Compile Include="Assets\Scripts\Princess.cs" />
+    <Compile Include="Assets\Scripts\PrincessCorpse.cs" />
     <Compile Include="Assets\Scripts\ResponsiveEntity.cs" />
     <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\VoiceGlitchArea.cs" />

@@ -6,11 +6,11 @@ public class FocusPlayer : MonoBehaviour {
     Vector2 camPos;
 
 
-    CharacterPhysics Mario;
+    Mario Mario;
 
 	// Use this for initialization
 	void Start () {
-        Mario = FindObjectOfType<CharacterPhysics>();
+        Mario = FindObjectOfType<Mario>();
 
     }
 	
@@ -18,8 +18,8 @@ public class FocusPlayer : MonoBehaviour {
 	void Update () {
         camPos = transform.position;
 
-        if (!Mario && FindObjectOfType<CharacterPhysics>())
-            Mario = FindObjectOfType<CharacterPhysics>();
+        if (!Mario && FindObjectOfType<Mario>())
+            Mario = FindObjectOfType<Mario>();
         if (!Mario)
             return;
 

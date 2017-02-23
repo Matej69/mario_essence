@@ -8,10 +8,12 @@ public class Pipe : ResponsiveEntity {
     MapManager mapManager;
 
     bool goingThroughPipe = false;
+    bool isPipeSoundSpawned = false;
     Timer marioInsidePipeTimer;
 
 	// Use this for initialization
 	void Start () {
+        InitRefrences();
         mapManager = FindObjectOfType<MapManager>();
         marioInsidePipeTimer = new Timer(1.9f);
     }
@@ -21,8 +23,8 @@ public class Pipe : ResponsiveEntity {
 
         if (MarioSprite)
             MarioEnteringPipeHandler();
-        else if(FindObjectOfType<CharacterPhysics>())
-                MarioSprite = FindObjectOfType<CharacterPhysics>().gameObject.transform.FindChild("MarioSprite").gameObject;
+        else if(FindObjectOfType<Mario>())
+                MarioSprite = FindObjectOfType<Mario>().gameObject.transform.FindChild("MarioSprite").gameObject;
         
     }
 
@@ -37,7 +39,7 @@ public class Pipe : ResponsiveEntity {
 
     public void MarioEnteringPipeHandler() {
         //get mario gameObject
-        CharacterPhysics mario = MarioSprite.transform.parent.GetComponent<CharacterPhysics>();
+        Mario mario = MarioSprite.transform.parent.GetComponent<Mario>();
 
         if (goingThroughPipe) {
             mario.transform.position = new Vector2(mario.transform.position.x, mario.transform.position.y - 1f * Time.deltaTime);
@@ -63,12 +65,17 @@ public class Pipe : ResponsiveEntity {
             (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && mario.grounded)
         {
             MarioSprite.GetComponent<SpriteRenderer>().sortingLayerName = "BackgroundEntities";
-            CharacterPhysics marioScr = MarioSprite.transform.parent.GetComponent<CharacterPhysics>();
+            Mario marioScr = MarioSprite.transform.parent.GetComponent<Mario>();
             marioScr.canBeControled = false;
             marioScr.SetVelocity(new Vector2(0, 0));
             goingThroughPipe = true;
+            if (!isPipeSoundSpawned) {
+                audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.PIPE);
+                isPipeSoundSpawned = true;
+            }
         } 
     }
+    
     
 
 

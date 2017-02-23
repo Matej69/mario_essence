@@ -50,30 +50,42 @@ public class MapManager : MonoBehaviour {
         DYING,
         DEAD
     }
+
     [HideInInspector]
     public E_PRINCESS_STATE princessState = E_PRINCESS_STATE.ALIVE;
     public int princessDeathSpriteID = 1;
     int coinsCollected = 0;
     int gumbasKilled = 0;
+    
+    bool shouldSpawnGlitchScreen = false;
+    float timeOfBlueScreenSpawn = 0.0f;
+    List<GameObject> listOfActiveGlitches = new List<GameObject>();
+
+    public GameObject[] glitchedVoices;
     //*******************************************
 
     public List<TextureIDPair> mapTextures = new List<TextureIDPair>();
     public List<ColorGameObjectPair> colorObjectPair = new List<ColorGameObjectPair>();
 
+    public GameObject BlueScreenPrefab;
+
     List<GameObject> entities = new List<GameObject>();
     [HideInInspector] public GameObject marioRefrence;
+
+    public GameObject MusicThemePlaying = null;
 
     public Transform mapSpawnPos;
        
     const float tileSize = 1;
 
     CameraShader cameraShader;
-
+    AudioManager audioManager;
 
 
     // Use this for initialization
     void Start () {
         cameraShader = FindObjectOfType<CameraShader>();
+        audioManager = FindObjectOfType<AudioManager>();               
 
         CreateMap(E_MAP_ID.START_MAP);
     }
@@ -93,6 +105,11 @@ public class MapManager : MonoBehaviour {
         DeleteMap();
         cameraShader.ResetEntityShaders();
         currentMap = _id;
+        InitLevelMusic(currentMap);
+
+        ClearAllGlitchVoiceAreas();
+        SpawnGlitchedVoiceHandler();
+        StartCoroutine(SpawnBlueScreenHandler());
 
         Camera.main.transform.position = new Vector3(0, 5, Camera.main.transform.position.z);
 
@@ -116,7 +133,7 @@ public class MapManager : MonoBehaviour {
             }
         }
         //GET MARIO REFRENCE
-        marioRefrence = FindObjectOfType<CharacterPhysics>().gameObject;
+        marioRefrence = FindObjectOfType<Mario>().gameObject;
     }
 
 
@@ -129,7 +146,54 @@ public class MapManager : MonoBehaviour {
     }
 
 
+    //DESTROY ALL VOICE AREA GLITCH GAME OBJECTS
+    void ClearAllGlitchVoiceAreas() {
+        foreach (GameObject glitch in listOfActiveGlitches)
+            Destroy(glitch);
+        listOfActiveGlitches.Clear();
+    }
 
+    //INIT LEVEL MUSIC
+    void InitLevelMusic(E_MAP_ID _id) {
+        Destroy(MusicThemePlaying);
+        if (_id == E_MAP_ID.START_MAP)
+            MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL1);
+        if (_id == E_MAP_ID.UNDERGROUND_MAP)
+            MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL2);    
+    }
+
+
+    //******************SPAWN GLITCHED VOICE****************
+    void SpawnGlitchedVoiceHandler() {
+        //RANDOM SPAWN GLITCHES
+        bool shouldSpawn = (Random.Range(0, 4) == 3) ? true : false;
+        Vector3 placeToSpawn = (currentMap == E_MAP_ID.START_MAP) ? new Vector3((float)(Random.Range(30, 170)), 5, 0) : new Vector3((float)(Random.Range(25, 55)), 5, 0);
+        
+        if (shouldSpawn) {
+            //lvl normal 0
+            if (currentMap == E_MAP_ID.START_MAP) { 
+                listOfActiveGlitches.Add((GameObject)Instantiate(glitchedVoices[0], placeToSpawn, Quaternion.identity));
+            }
+            //lvl underground 1 || 2
+            if (currentMap == E_MAP_ID.UNDERGROUND_MAP)
+                listOfActiveGlitches.Add((GameObject)Instantiate(glitchedVoices[Random.Range(1,3)], placeToSpawn, Quaternion.identity));            
+        }
+
+        //UNDERGROUND LEVEL GLITCH
+        shouldSpawn = (Random.Range(0, 3) == 0) ? true : false;
+        placeToSpawn = new Vector3(65, 1, 0);
+        if (currentMap == E_MAP_ID.UNDERGROUND_MAP && shouldSpawn)
+            listOfActiveGlitches.Add((GameObject)Instantiate(glitchedVoices[3], placeToSpawn, Quaternion.identity));
+    }
+
+
+    //******************SPAWN BLUE SCREEN VOICE****************
+    IEnumerator SpawnBlueScreenHandler() {
+        yield return new WaitForSeconds((float)Random.Range(7, 45));
+        if (Random.Range(0, 7) == 1)
+            Instantiate(BlueScreenPrefab);
+                
+    }
 
 
 
@@ -174,7 +238,7 @@ public class MapManager : MonoBehaviour {
                     targetedEntities.Add(go);
                 }
             else {
-                GameObject marioSprite = marioRefrence.GetComponent<CharacterPhysics>().MarioSprite;
+                GameObject marioSprite = marioRefrence.GetComponent<Mario>().MarioSprite;
                 targetedEntities.Add(marioSprite);
             }
             

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterPhysics : MonoBehaviour {
+public class Mario : MonoBehaviour {
 
     enum E_MOVE_STATE {
         LEFT,
@@ -48,16 +48,24 @@ public class CharacterPhysics : MonoBehaviour {
 
     public GameObject MarioSprite;
 
+    AudioManager audioManager;
+
     public bool isDeath = false;
     public bool canBeControled = true;
+    public bool isDeathSoundCreated = false;
 
     // Use this for initialization
     void Start () {
-                	
-	}
+        audioManager = FindObjectOfType<AudioManager>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
+
+        if(isDeath && !isDeathSoundCreated) {
+            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.MARIO_DIED);
+            isDeathSoundCreated = true;
+        }
 
         //applying some values to velocity
         if (!isDeath && canBeControled) { 

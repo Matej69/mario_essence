@@ -10,8 +10,8 @@ public class ItemBlock : ResponsiveEntity {
 
 	// Use this for initialization
 	void Start () {
-	
-	}
+        InitRefrences();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -29,7 +29,7 @@ public class ItemBlock : ResponsiveEntity {
         switch (rand) {
             case 0:
                 {
-                    prefab = mapManager.GetPrefab(MapManager.E_ENTITY_ID.COIN);                    
+                    prefab = mapManager.GetPrefab(MapManager.E_ENTITY_ID.COIN);                                       
                 }break;
             case 1:
                 {
@@ -41,8 +41,11 @@ public class ItemBlock : ResponsiveEntity {
                 }break;
         }        
         GameObject newObj = (GameObject)Instantiate(prefab, new Vector2(transform.position.x, transform.position.y + 1), Quaternion.identity);
-        if(prefab.GetComponent<ResponsiveEntity>().id == MapManager.E_ENTITY_ID.COIN)
+        if (prefab.GetComponent<ResponsiveEntity>().id == MapManager.E_ENTITY_ID.COIN)
+        {
+            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.COIN);
             newObj.GetComponent<Coin>().pickedUp = true;
+        }
 
         FindObjectOfType<MapManager>().AddToList(ref newObj);       
 

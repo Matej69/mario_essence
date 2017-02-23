@@ -10,6 +10,7 @@ public class Mushroom : ResponsiveEntity {
     // Use this for initialization
     void Start () {
         InitMasks();
+        InitRefrences();
         velocity = new Vector2(speed, 0);
 
         cameraShader = FindObjectOfType<CameraShader>();
@@ -55,18 +56,21 @@ public class Mushroom : ResponsiveEntity {
 
     void OnMarioTouchedPoison(ref GameObject mario) {
         //set new mario state
-        mario.GetComponent<CharacterPhysics>().SetAnimatorState(CharacterPhysics.E_ANIM_STATE.DIE);
-        mario.GetComponent<CharacterPhysics>().isDeath = true;
-        mario.GetComponent<CharacterPhysics>().SetVelocity(new Vector2(0, 0));
+        mario.GetComponent<Mario>().SetAnimatorState(Mario.E_ANIM_STATE.DIE);
+        mario.GetComponent<Mario>().isDeath = true;
+        mario.GetComponent<Mario>().SetVelocity(new Vector2(0, 0));
         //set shader
         CameraShader.E_CAM_MATERIAL_ID camShaderID = (CameraShader.E_CAM_MATERIAL_ID)Random.Range(0, (int)CameraShader.E_CAM_MATERIAL_ID.SIZE);
         cameraShader.SetMaterial(camShaderID, 0.2f);
         GetComponent<SpriteRenderer>().sprite = null;
         StartCoroutine(ResetMap(3f));
+        //create sound
+        audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.MUSHROOM_GREEN);
     }
 
     void OnMarioTouchedNormal(ref GameObject mario) {
-        mapManager.marioRefrence.GetComponent<CharacterPhysics>().canRun = true;
+        mapManager.marioRefrence.GetComponent<Mario>().canRun = true;
+        audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.MUSHROOM_RED);
         Destroy(gameObject);
     }
 

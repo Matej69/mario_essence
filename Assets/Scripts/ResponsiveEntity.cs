@@ -30,6 +30,10 @@ public class ResponsiveEntity : MonoBehaviour
 
     public bool grounded = false;
 
+    [HideInInspector]
+    public AudioManager audioManager;
+    public MapManager mapManager;
+
     virtual public void OnMarioTouchedTop(ref GameObject mario) { 
     }
     virtual public void OnMarioTouchedBot(ref GameObject mario) { 
@@ -56,6 +60,10 @@ public class ResponsiveEntity : MonoBehaviour
     public void InitMasks() {
         m_platform = LayerMask.GetMask("Platform");
         m_mario = LayerMask.GetMask("Mario");
+    }
+    public void InitRefrences() {
+        audioManager = FindObjectOfType<AudioManager>();
+        mapManager = FindObjectOfType<MapManager>();
     }
 
       public void ApplyMovement() { 

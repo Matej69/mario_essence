@@ -6,10 +6,11 @@ public class Coin : ResponsiveEntity{
     public bool pickedUp = false;
     float vertSpeed = 1;
     float opacityReduceSpeed = 2;
-    
+        
 
     // Use this for initialization
     void Start () {
+        InitRefrences();
 
     }
 	
@@ -29,12 +30,18 @@ public class Coin : ResponsiveEntity{
 	}
     
     public override void OnMarioTouchedTop(ref GameObject mario) {
+        if (!pickedUp)
+            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.COIN);
         pickedUp = true;
     }
     public override void OnMarioTouchedBot(ref GameObject mario) {
+        if (!pickedUp)
+            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.COIN);
         pickedUp = true;
     }
     public override void OnMarioTouchedHor(ref GameObject mario) {
+        if (!pickedUp)
+            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.COIN);
         pickedUp = true;
     }
 

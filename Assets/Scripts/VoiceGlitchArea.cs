@@ -7,6 +7,7 @@ public class VoiceGlitchArea : MonoBehaviour {
     GameObject mario;
 
     CameraShader camShader;
+    MapManager mapManager;
 
     public float minPitch;
     public float maxPitch;
@@ -14,9 +15,10 @@ public class VoiceGlitchArea : MonoBehaviour {
     // Use this for initialization
     void Start () {
         camShader = FindObjectOfType<CameraShader>();
+        mapManager = FindObjectOfType<MapManager>();
 
-        if (FindObjectOfType<CharacterPhysics>() != null)
-            mario = FindObjectOfType<CharacterPhysics>().gameObject;
+        if (FindObjectOfType<Mario>() != null)
+            mario = FindObjectOfType<Mario>().gameObject;
 
         audioSource.pitch = (Random.Range(0, 2) == 0) ? 1 : 0.75f;
 
@@ -30,8 +32,8 @@ public class VoiceGlitchArea : MonoBehaviour {
             Destroy(gameObject);
 
         if(mario == null) {
-            if (FindObjectOfType<CharacterPhysics>() != null)
-                mario = FindObjectOfType<CharacterPhysics>().gameObject;
+            if (FindObjectOfType<Mario>() != null)
+                mario = FindObjectOfType<Mario>().gameObject;
         }
         else
             OnMarioCollisionHandler();        
@@ -41,14 +43,22 @@ public class VoiceGlitchArea : MonoBehaviour {
 
 
     void Play() {
+        //play glitched sound
         if (!audioSource.isPlaying) {
             audioSource.Play();
-        } 
+        }
+        //mute backgorund music
+        if (mapManager.MusicThemePlaying.GetComponent<AudioSource>().isPlaying)
+            mapManager.MusicThemePlaying.GetComponent<AudioSource>().Pause();
     }
 
     void Pause() {
+        //play glitched sound
         if (audioSource.isPlaying)
             audioSource.Pause();
+        //mute backgorund music
+        if(!mapManager.MusicThemePlaying.GetComponent<AudioSource>().isPlaying)
+        mapManager.MusicThemePlaying.GetComponent<AudioSource>().Play();
     }
 
 
