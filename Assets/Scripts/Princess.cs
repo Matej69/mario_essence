@@ -15,16 +15,15 @@ public class Princess : ResponsiveEntity {
     bool canEssenceBeSpawned = false;
 
     MapManager mapManager;
-    CameraShader cameraShader;
 
 	// Use this for initialization
 	void Start () {
         mapManager = FindObjectOfType<MapManager>();
-        cameraShader = FindObjectOfType<CameraShader>();
 
-        gravity = 0.095f;
+        gravity = 0.28f;
 
         InitMasks();
+        InitRefrences();
         velocity = new Vector2(0, 0);
         
         if (mapManager.princessState != MapManager.E_PRINCESS_STATE.ALIVE)
@@ -55,12 +54,14 @@ public class Princess : ResponsiveEntity {
             GetComponent<SpriteRenderer>().sprite = peachFalling;
             isFalling = true;
             cameraShader.SetMaterial(CameraShader.E_CAM_MATERIAL_ID.NOCTURNO, 0.1f);
+            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.SCREAM);
         }
         //MOMENT WHEN PEACH HITS GROUND
         else if (grounded && marioPushedPeach) {
             PrincessCorpse princessCorpse = mapManager.GetEntities(MapManager.E_ENTITY_ID.PRINCESS_CORPSE)[0].GetComponent<PrincessCorpse>();
             princessCorpse.SetInitialSprite();
-            mapManager.princessState = MapManager.E_PRINCESS_STATE.DYING;            
+            mapManager.princessState = MapManager.E_PRINCESS_STATE.DYING;
+            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.SPLASH);
             Destroy(gameObject);            
         }
 

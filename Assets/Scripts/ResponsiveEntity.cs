@@ -33,6 +33,7 @@ public class ResponsiveEntity : MonoBehaviour
     [HideInInspector]
     public AudioManager audioManager;
     public MapManager mapManager;
+    public CameraShader cameraShader;
 
     virtual public void OnMarioTouchedTop(ref GameObject mario) { 
     }
@@ -64,6 +65,7 @@ public class ResponsiveEntity : MonoBehaviour
     public void InitRefrences() {
         audioManager = FindObjectOfType<AudioManager>();
         mapManager = FindObjectOfType<MapManager>();
+        cameraShader = FindObjectOfType<CameraShader>();
     }
 
       public void ApplyMovement() { 

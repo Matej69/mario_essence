@@ -7,6 +7,8 @@ public class Mushroom : ResponsiveEntity {
     CameraShader cameraShader;
     MapManager mapManager;
 
+    bool isGreenSoundCreated = false;
+
     // Use this for initialization
     void Start () {
         InitMasks();
@@ -29,26 +31,26 @@ public class Mushroom : ResponsiveEntity {
   
 
      public override void OnMarioTouchedTop(ref GameObject mario) {
-        if (id == MapManager.E_ENTITY_ID.MUSHROOM_POISON) {
+        if (id == MapManager.E_ENTITY_ID.MUSHROOM_POISON && !mario.GetComponent<Mario>().isDeath) {
             OnMarioTouchedPoison(ref mario);
         }
-        else
+        else if(id == MapManager.E_ENTITY_ID.MUSHROOM)
             OnMarioTouchedNormal(ref mario);
     }
 
-    public override void OnMarioTouchedBot(ref GameObject mario) {
-        if (id == MapManager.E_ENTITY_ID.MUSHROOM_POISON) {
+    public override void OnMarioTouchedBot(ref GameObject mario ) {
+        if (id == MapManager.E_ENTITY_ID.MUSHROOM_POISON && !mario.GetComponent<Mario>().isDeath) {
             OnMarioTouchedPoison(ref mario);
         }
-        else
+        else if (id == MapManager.E_ENTITY_ID.MUSHROOM)
             OnMarioTouchedNormal(ref mario);
     }
 
     public override void OnMarioTouchedHor(ref GameObject mario) {
-        if (id == MapManager.E_ENTITY_ID.MUSHROOM_POISON) {
+        if (id == MapManager.E_ENTITY_ID.MUSHROOM_POISON && !mario.GetComponent<Mario>().isDeath) {
             OnMarioTouchedPoison(ref mario);
         }
-        else
+        else if (id == MapManager.E_ENTITY_ID.MUSHROOM)
             OnMarioTouchedNormal(ref mario);
     }
 
@@ -62,10 +64,15 @@ public class Mushroom : ResponsiveEntity {
         //set shader
         CameraShader.E_CAM_MATERIAL_ID camShaderID = (CameraShader.E_CAM_MATERIAL_ID)Random.Range(0, (int)CameraShader.E_CAM_MATERIAL_ID.SIZE);
         cameraShader.SetMaterial(camShaderID, 0.2f);
+        //hide mushroom becouse if we destroy it, we can't call StartRoutine();
         GetComponent<SpriteRenderer>().sprite = null;
         StartCoroutine(ResetMap(3f));
         //create sound
-        audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.MUSHROOM_GREEN);
+        if (!isGreenSoundCreated)
+        {
+            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.MUSHROOM_GREEN);
+            isGreenSoundCreated = true;
+        }
     }
 
     void OnMarioTouchedNormal(ref GameObject mario) {

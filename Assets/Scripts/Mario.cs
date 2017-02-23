@@ -235,14 +235,14 @@ public class Mario : MonoBehaviour {
                                entityScript.id == MapManager.E_ENTITY_ID.UNDERGROUND_BRICK)
                                 entityScript.OnMarioTouched(ResponsiveEntity.E_MARIO_TOUCHED.BOT, ref mario);
                         }
+                        if (rayDir == -1){
+                            if(entityScript.id == MapManager.E_ENTITY_ID.CLOUD_TRAVEL)
+                                entityScript.OnMarioTouched(ResponsiveEntity.E_MARIO_TOUCHED.TOP, ref mario);
+                        }
                     }
                 }
             }
-        }
-
-    
-
-
+        } 
     }
 
 

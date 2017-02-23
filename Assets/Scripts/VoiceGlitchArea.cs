@@ -12,6 +12,8 @@ public class VoiceGlitchArea : MonoBehaviour {
     public float minPitch;
     public float maxPitch;
 
+    bool marioAlreadyCollided = false;
+
     // Use this for initialization
     void Start () {
         camShader = FindObjectOfType<CameraShader>();
@@ -27,8 +29,8 @@ public class VoiceGlitchArea : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        transform.localScale = new Vector2(transform.localScale.x - 0.01f * Time.deltaTime, transform.localScale.y);
-        if (transform.localScale.x < 0.02f)
+        transform.localScale = new Vector2(transform.localScale.x - 0.005f * Time.deltaTime, transform.localScale.y);
+        if (transform.localScale.x < 0.01f)
             Destroy(gameObject);
 
         if(mario == null) {
@@ -71,6 +73,9 @@ public class VoiceGlitchArea : MonoBehaviour {
         audioSource.pitch = (audioSource.pitch > maxPitch) ? minPitch : audioSource.pitch;
 
         if (marioPosX > glitchAreaPosX - glitchAreaWidth / 2 && marioPosX < glitchAreaPosX + glitchAreaWidth / 2) {
+            if (!marioAlreadyCollided)
+                mapManager.MusicThemePlaying.GetComponent<AudioSource>().pitch -= 0.5f;
+            marioAlreadyCollided = true;
             camShader.SetMaterial(CameraShader.E_CAM_MATERIAL_ID.GLITCHED,0.18f);
             Play();
         }

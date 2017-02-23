@@ -40,6 +40,7 @@ public class MapManager : MonoBehaviour {
         BRICK,
         UNDERGROUND_BRICK,
         PRINCESS_CORPSE,
+        CLOUD_TRAVEL,
         SIZE
     }
 
@@ -56,7 +57,9 @@ public class MapManager : MonoBehaviour {
     public int princessDeathSpriteID = 1;
     int coinsCollected = 0;
     int gumbasKilled = 0;
-    
+
+    bool outOfBoundsEffectsTriggered = false;
+
     bool shouldSpawnGlitchScreen = false;
     float timeOfBlueScreenSpawn = 0.0f;
     List<GameObject> listOfActiveGlitches = new List<GameObject>();
@@ -85,9 +88,11 @@ public class MapManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         cameraShader = FindObjectOfType<CameraShader>();
-        audioManager = FindObjectOfType<AudioManager>();               
+        audioManager = FindObjectOfType<AudioManager>();
 
-        CreateMap(E_MAP_ID.START_MAP);
+        audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.SIX_ES);      
+
+        CreateMap(E_MAP_ID.CLOUD_MAP);
     }
 	
 	// Update is called once per frame
@@ -107,11 +112,15 @@ public class MapManager : MonoBehaviour {
         currentMap = _id;
         InitLevelMusic(currentMap);
 
+        outOfBoundsEffectsTriggered = false;
+
         ClearAllGlitchVoiceAreas();
         SpawnGlitchedVoiceHandler();
         StartCoroutine(SpawnBlueScreenHandler());
-
+                
         Camera.main.transform.position = new Vector3(0, 5, Camera.main.transform.position.z);
+        if (currentMap == E_MAP_ID.UNDERGROUND_MAP || currentMap == E_MAP_ID.CLOUD_MAP)
+            Camera.main.backgroundColor = new Color(0, 0, 0, 1);
 
         Texture2D map = GetTexture(_id);
         Color32[] pixels = map.GetPixels32();
@@ -159,7 +168,9 @@ public class MapManager : MonoBehaviour {
         if (_id == E_MAP_ID.START_MAP)
             MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL1);
         if (_id == E_MAP_ID.UNDERGROUND_MAP)
-            MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL2);    
+            MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL2);
+        if (_id == E_MAP_ID.CLOUD_MAP)
+            MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL2);
     }
 
 
@@ -167,7 +178,7 @@ public class MapManager : MonoBehaviour {
     void SpawnGlitchedVoiceHandler() {
         //RANDOM SPAWN GLITCHES
         bool shouldSpawn = (Random.Range(0, 4) == 3) ? true : false;
-        Vector3 placeToSpawn = (currentMap == E_MAP_ID.START_MAP) ? new Vector3((float)(Random.Range(30, 170)), 5, 0) : new Vector3((float)(Random.Range(25, 55)), 5, 0);
+        Vector3 placeToSpawn = (currentMap == E_MAP_ID.START_MAP) ? new Vector3((float)(Random.Range(30, 60)), 5, 0) : new Vector3((float)(Random.Range(25, 55)), 5, 0);
         
         if (shouldSpawn) {
             //lvl normal 0
@@ -189,8 +200,8 @@ public class MapManager : MonoBehaviour {
 
     //******************SPAWN BLUE SCREEN VOICE****************
     IEnumerator SpawnBlueScreenHandler() {
-        yield return new WaitForSeconds((float)Random.Range(7, 45));
-        if (Random.Range(0, 7) == 1)
+        yield return new WaitForSeconds((float)Random.Range(1,10));
+        if (Random.Range(0, 5) == 1)
             Instantiate(BlueScreenPrefab);
                 
     }
@@ -263,13 +274,29 @@ public class MapManager : MonoBehaviour {
         entities.Add(_go);
     }
 
+
+
+
     public void HandleOnMarioDead() {
         if (marioRefrence == null)
             return;
 
-        if(marioRefrence.transform.position.y < - 3)
-            CreateMap(currentMap);
+        if(marioRefrence.transform.position.y < -3 && !outOfBoundsEffectsTriggered) {
+            outOfBoundsEffectsTriggered = true;
+            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.MARIO_DIED);
+            cameraShader.SetMaterial(CameraShader.E_CAM_MATERIAL_ID.GLITCHED, 2.7f);            
+            StartCoroutine(MarioOutOfBounds());
+        }
     }
+
+    IEnumerator MarioOutOfBounds() {
+        yield return new WaitForSeconds(2.7f);
+        CreateMap(currentMap);
+
+    }
+
+
+
 
 
 }

@@ -8,6 +8,8 @@ public class ErrorScreen : MonoBehaviour {
     public Text message;
     public AudioSource audioSource;
 
+    MapManager mapManager;
+
     public enum E_MESSAGE_ID {
         CONFUSED,
         HELP_ME,
@@ -21,13 +23,19 @@ public class ErrorScreen : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        mapManager = FindObjectOfType<MapManager>();
         audioSource.pitch = (float)Random.Range(130, 250) / 1000;
         SetRandomText();
+
+        if (mapManager.MusicThemePlaying.GetComponent<AudioSource>().isPlaying)
+            mapManager.MusicThemePlaying.GetComponent<AudioSource>().Pause();
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKey(KeyCode.Space)) {
+            if (!mapManager.MusicThemePlaying.GetComponent<AudioSource>().isPlaying)
+                mapManager.MusicThemePlaying.GetComponent<AudioSource>().Play();
             Destroy(gameObject);
         }
 
