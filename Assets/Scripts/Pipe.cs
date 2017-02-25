@@ -46,7 +46,10 @@ public class Pipe : ResponsiveEntity {
 
             marioInsidePipeTimer.Tick(Time.deltaTime);
             if (marioInsidePipeTimer.IsFinished()) {
-                mapManager.CreateMap(MapManager.E_MAP_ID.UNDERGROUND_MAP);
+                if(mapManager.currentMap == MapManager.E_MAP_ID.START_MAP)
+                    mapManager.CreateMap(MapManager.E_MAP_ID.UNDERGROUND_MAP);
+                else
+                    mapManager.CreateMap(MapManager.E_MAP_ID.START_MAP);
                 return;
             }
         }

@@ -22,6 +22,8 @@ public class MapManager : MonoBehaviour {
         START_MAP,
         CLOUD_MAP,
         UNDERGROUND_MAP,
+        ALL_COINS_START,
+        ALL_COINS_UNDERGROUND,
         SIZE
     }
 
@@ -55,7 +57,7 @@ public class MapManager : MonoBehaviour {
     [HideInInspector]
     public E_PRINCESS_STATE princessState = E_PRINCESS_STATE.ALIVE;
     public int princessDeathSpriteID = 1;
-    int coinsCollected = 0;
+    public int coinsCollected = 0;
     int gumbasKilled = 0;
 
     bool outOfBoundsEffectsTriggered = false;
@@ -71,6 +73,8 @@ public class MapManager : MonoBehaviour {
     public List<ColorGameObjectPair> colorObjectPair = new List<ColorGameObjectPair>();
 
     public GameObject BlueScreenPrefab;
+    public GameObject FinalBossPrefab;
+    public GameObject MorseCodeEntity;
 
     List<GameObject> entities = new List<GameObject>();
     [HideInInspector] public GameObject marioRefrence;
@@ -78,7 +82,7 @@ public class MapManager : MonoBehaviour {
     public GameObject MusicThemePlaying = null;
 
     public Transform mapSpawnPos;
-       
+
     const float tileSize = 1;
 
     CameraShader cameraShader;
@@ -92,13 +96,14 @@ public class MapManager : MonoBehaviour {
 
         audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.SIX_ES);      
 
-        CreateMap(E_MAP_ID.CLOUD_MAP);
+        CreateMap(E_MAP_ID.ALL_COINS_UNDERGROUND);
     }
 	
 	// Update is called once per frame
 	void Update () {
 
         HandleOnMarioDead();
+        EnoughCoinsCollectedHnadler();
 
     }
 
@@ -107,6 +112,7 @@ public class MapManager : MonoBehaviour {
 
     //************SET************
     public void CreateMap(E_MAP_ID _id) {
+
         DeleteMap();
         cameraShader.ResetEntityShaders();
         currentMap = _id;
@@ -117,11 +123,7 @@ public class MapManager : MonoBehaviour {
         ClearAllGlitchVoiceAreas();
         SpawnGlitchedVoiceHandler();
         StartCoroutine(SpawnBlueScreenHandler());
-                
-        Camera.main.transform.position = new Vector3(0, 5, Camera.main.transform.position.z);
-        if (currentMap == E_MAP_ID.UNDERGROUND_MAP || currentMap == E_MAP_ID.CLOUD_MAP)
-            Camera.main.backgroundColor = new Color(0, 0, 0, 1);
-
+                       
         Texture2D map = GetTexture(_id);
         Color32[] pixels = map.GetPixels32();
         int w = map.width;
@@ -141,10 +143,27 @@ public class MapManager : MonoBehaviour {
                 }                
             }
         }
+
         //GET MARIO REFRENCE
         marioRefrence = FindObjectOfType<Mario>().gameObject;
-    }
 
+        //PLACE CAMERA
+        Camera.main.transform.position = new Vector3(marioRefrence.transform.position.x, 5, Camera.main.transform.position.z);
+        if (currentMap == E_MAP_ID.UNDERGROUND_MAP || currentMap == E_MAP_ID.CLOUD_MAP || currentMap == E_MAP_ID.ALL_COINS_START)
+            Camera.main.backgroundColor = new Color32(0, 0, 20, 255);
+
+        //IF CLOUD_MAP -> ADD FINAL BOSS ENTITY
+        if (currentMap == E_MAP_ID.CLOUD_MAP)
+            entities.Add((GameObject)Instantiate(FinalBossPrefab, new Vector2(216,4), Quaternion.identity));
+        //IF ALL_COINS_START -> ADD MORSE CODE ENTITY
+        if (currentMap == E_MAP_ID.ALL_COINS_START)
+            entities.Add((GameObject)Instantiate(MorseCodeEntity, new Vector2(176, 5), Quaternion.identity));
+
+        //MAYBE SET CAMERA SHADER        
+        SetRandomCameraShader();
+
+    }
+    
 
    public void DeleteMap() {
         for(int i = entities.Count - 1; i >= 0; --i) {
@@ -153,6 +172,17 @@ public class MapManager : MonoBehaviour {
         }
         Destroy(marioRefrence);
     }
+
+
+
+    public void SetRandomCameraShader() {
+        switch (Random.Range(0, 30)) {
+            case 1: cameraShader.SetMaterial(CameraShader.E_CAM_MATERIAL_ID.GLITCHED, 999f); break;
+            case 2: cameraShader.SetMaterial(CameraShader.E_CAM_MATERIAL_ID.NOCTURNO, 999f); break;
+            case 3: case 4: case 5: cameraShader.SetMaterial(CameraShader.E_CAM_MATERIAL_ID.TAN, 999f); break;
+        }
+    }
+
 
 
     //DESTROY ALL VOICE AREA GLITCH GAME OBJECTS
@@ -165,7 +195,7 @@ public class MapManager : MonoBehaviour {
     //INIT LEVEL MUSIC
     void InitLevelMusic(E_MAP_ID _id) {
         Destroy(MusicThemePlaying);
-        if (_id == E_MAP_ID.START_MAP)
+        if (_id == E_MAP_ID.START_MAP || _id == E_MAP_ID.ALL_COINS_START)
             MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL1);
         if (_id == E_MAP_ID.UNDERGROUND_MAP)
             MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL2);
@@ -200,8 +230,8 @@ public class MapManager : MonoBehaviour {
 
     //******************SPAWN BLUE SCREEN VOICE****************
     IEnumerator SpawnBlueScreenHandler() {
-        yield return new WaitForSeconds((float)Random.Range(1,10));
-        if (Random.Range(0, 5) == 1)
+        yield return new WaitForSeconds((float)Random.Range(7,20));
+        if (Random.Range(0, 6) == 1)
             Instantiate(BlueScreenPrefab);
                 
     }
@@ -282,6 +312,8 @@ public class MapManager : MonoBehaviour {
             return;
 
         if(marioRefrence.transform.position.y < -3 && !outOfBoundsEffectsTriggered) {
+            marioRefrence.GetComponent<Mario>().SetVelocity(new Vector2(0, 0));
+            marioRefrence.GetComponent<Mario>().isDeath = true;
             outOfBoundsEffectsTriggered = true;
             audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.MARIO_DIED);
             cameraShader.SetMaterial(CameraShader.E_CAM_MATERIAL_ID.GLITCHED, 2.7f);            
@@ -292,6 +324,23 @@ public class MapManager : MonoBehaviour {
     IEnumerator MarioOutOfBounds() {
         yield return new WaitForSeconds(2.7f);
         CreateMap(currentMap);
+
+    }
+
+
+
+    public void EnoughCoinsCollectedHnadler() {
+        Debug.Log(coinsCollected);
+        if (currentMap == E_MAP_ID.START_MAP && coinsCollected > 12)
+        {
+            CreateMap(E_MAP_ID.ALL_COINS_START);
+            coinsCollected = 0;
+        }
+        if (currentMap == E_MAP_ID.UNDERGROUND_MAP && coinsCollected > 32)
+        {
+            CreateMap(E_MAP_ID.ALL_COINS_UNDERGROUND);
+            coinsCollected = 0;
+        }
 
     }
 

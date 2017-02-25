@@ -43,6 +43,7 @@ public class ItemBlock : ResponsiveEntity {
         GameObject newObj = (GameObject)Instantiate(prefab, new Vector2(transform.position.x, transform.position.y + 1), Quaternion.identity);
         if (prefab.GetComponent<ResponsiveEntity>().id == MapManager.E_ENTITY_ID.COIN)
         {
+            mapManager.coinsCollected++;
             audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.COIN);
             newObj.GetComponent<Coin>().pickedUp = true;
         }

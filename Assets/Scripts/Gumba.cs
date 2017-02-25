@@ -97,10 +97,10 @@ public class Gumba : ResponsiveEntity {
 
 
 
-    public override void OnMarioTouchedTop(ref GameObject mario) {
-        camShader.SetMaterial(CameraShader.E_CAM_MATERIAL_ID.EARTQUAKE, 0.1f);
+    public override void OnMarioTouchedTop(ref GameObject mario) {        
         if (state != E_GUMBA_STATE.DEAD)
         {
+            camShader.SetMaterial(CameraShader.E_CAM_MATERIAL_ID.EARTQUAKE, 0.1f);
             //spawn proper audio
             if (!gumbaDamaged)
                 audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.JUMP_SMALL);

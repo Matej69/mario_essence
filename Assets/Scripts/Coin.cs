@@ -30,18 +30,20 @@ public class Coin : ResponsiveEntity{
 	}
     
     public override void OnMarioTouchedTop(ref GameObject mario) {
-        if (!pickedUp)
-            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.COIN);
-        pickedUp = true;
+        OnMarioTouched();
     }
     public override void OnMarioTouchedBot(ref GameObject mario) {
-        if (!pickedUp)
-            audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.COIN);
-        pickedUp = true;
+        OnMarioTouched();
     }
     public override void OnMarioTouchedHor(ref GameObject mario) {
-        if (!pickedUp)
+        OnMarioTouched();
+    }
+
+    void OnMarioTouched() {
+        if (!pickedUp) { 
             audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.COIN);
+            mapManager.coinsCollected++;
+        }
         pickedUp = true;
     }
 

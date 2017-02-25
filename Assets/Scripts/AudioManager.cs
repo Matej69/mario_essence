@@ -26,6 +26,7 @@ public class AudioManager : MonoBehaviour {
         SCREAM,
         SPLASH,
         SIX_ES,
+        FINAL_BOSS,
         SIZE
     }
 
@@ -89,6 +90,7 @@ public class AudioManager : MonoBehaviour {
             case E_AUDIO_ID.PIPE:           { source.volume = 0.5f;     break; }
             case E_AUDIO_ID.SCREAM:         { source.volume = 0.2f;     break; }
             case E_AUDIO_ID.SPLASH:         { source.volume = 0.75f;    break; }
+            case E_AUDIO_ID.FINAL_BOSS:     { source.volume = 1f;       break; }
         }
         if(_audioID == E_AUDIO_ID.SCREAM)
             source.pitch = 1f;
