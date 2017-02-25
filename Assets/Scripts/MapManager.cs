@@ -74,7 +74,8 @@ public class MapManager : MonoBehaviour {
 
     public GameObject BlueScreenPrefab;
     public GameObject FinalBossPrefab;
-    public GameObject MorseCodeEntity;
+    public GameObject MorseCodeEntityPrefab;
+    public GameObject BarcodePrefab;
 
     List<GameObject> entities = new List<GameObject>();
     [HideInInspector] public GameObject marioRefrence;
@@ -93,10 +94,8 @@ public class MapManager : MonoBehaviour {
     void Start () {
         cameraShader = FindObjectOfType<CameraShader>();
         audioManager = FindObjectOfType<AudioManager>();
-
-        audioManager.CreateFreeAudioObject(AudioManager.E_AUDIO_ID.SIX_ES);      
-
-        CreateMap(E_MAP_ID.ALL_COINS_UNDERGROUND);
+  
+        CreateMap(E_MAP_ID.START_MAP);
     }
 	
 	// Update is called once per frame
@@ -157,7 +156,9 @@ public class MapManager : MonoBehaviour {
             entities.Add((GameObject)Instantiate(FinalBossPrefab, new Vector2(216,4), Quaternion.identity));
         //IF ALL_COINS_START -> ADD MORSE CODE ENTITY
         if (currentMap == E_MAP_ID.ALL_COINS_START)
-            entities.Add((GameObject)Instantiate(MorseCodeEntity, new Vector2(176, 5), Quaternion.identity));
+            entities.Add((GameObject)Instantiate(MorseCodeEntityPrefab, new Vector2(176, 5), Quaternion.identity));
+        if (currentMap == E_MAP_ID.ALL_COINS_UNDERGROUND)
+            entities.Add((GameObject)Instantiate(BarcodePrefab, new Vector2(230, 6.5f), Quaternion.identity));
 
         //MAYBE SET CAMERA SHADER        
         SetRandomCameraShader();
@@ -197,9 +198,7 @@ public class MapManager : MonoBehaviour {
         Destroy(MusicThemePlaying);
         if (_id == E_MAP_ID.START_MAP || _id == E_MAP_ID.ALL_COINS_START)
             MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL1);
-        if (_id == E_MAP_ID.UNDERGROUND_MAP)
-            MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL2);
-        if (_id == E_MAP_ID.CLOUD_MAP)
+        if (_id == E_MAP_ID.UNDERGROUND_MAP || _id == E_MAP_ID.CLOUD_MAP || _id == E_MAP_ID.ALL_COINS_UNDERGROUND)
             MusicThemePlaying = audioManager.GetAudioObject(AudioManager.E_AUDIO_ID.MUSIC_LVL2);
     }
 
@@ -331,7 +330,7 @@ public class MapManager : MonoBehaviour {
 
     public void EnoughCoinsCollectedHnadler() {
         Debug.Log(coinsCollected);
-        if (currentMap == E_MAP_ID.START_MAP && coinsCollected > 12)
+        if (currentMap == E_MAP_ID.START_MAP && coinsCollected > 14 && princessState == E_PRINCESS_STATE.DEAD)
         {
             CreateMap(E_MAP_ID.ALL_COINS_START);
             coinsCollected = 0;

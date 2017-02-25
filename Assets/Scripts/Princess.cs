@@ -20,7 +20,7 @@ public class Princess : ResponsiveEntity {
 	void Start () {
         mapManager = FindObjectOfType<MapManager>();
 
-        gravity = 0.28f;
+        gravity = 0.3f;
 
         InitMasks();
         InitRefrences();

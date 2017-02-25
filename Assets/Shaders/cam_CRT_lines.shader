@@ -47,13 +47,13 @@
 				
 				fixed4 col = tex2D(_MainTex, i.uv);
 
-				//CRT LINES........................
+				//CRT LINES........................			
 				fixed4 lines = tex2D(_CRTLines,i.uv);
-				if (lines.a == 1) {
+				if (lines.a < 0.05) {
 					col.r -= 0.1f;
 					col.g -= 0.1f;
 					col.b -= 0.1f;
-				}
+				}			
 				//.................................
 
 				return col;

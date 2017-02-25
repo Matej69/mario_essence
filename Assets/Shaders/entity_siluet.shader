@@ -3,6 +3,7 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+		_CRTLines ("Texture", 2D) = "white" {}
 	}
 	SubShader
 	{
@@ -41,6 +42,7 @@
 			}
 			
 			sampler2D _MainTex;
+			sampler2D _CRTLines;
 
 			fixed4 frag (v2f i) : SV_Target
 			{
@@ -49,6 +51,7 @@
 			
 			if(col.a != 0)
 				col.rgb = 0;
+					
 			
 
 				return col;
