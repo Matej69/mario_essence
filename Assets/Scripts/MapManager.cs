@@ -61,6 +61,9 @@ public class MapManager : MonoBehaviour {
     int gumbasKilled = 0;
 
     bool outOfBoundsEffectsTriggered = false;
+    [HideInInspector]
+    public bool princessJumpscareTriggered = false;
+
 
     bool shouldSpawnGlitchScreen = false;
     float timeOfBlueScreenSpawn = 0.0f;
@@ -94,7 +97,7 @@ public class MapManager : MonoBehaviour {
     void Start () {
         cameraShader = FindObjectOfType<CameraShader>();
         audioManager = FindObjectOfType<AudioManager>();
-  
+        
         CreateMap(E_MAP_ID.START_MAP);
     }
 	
@@ -102,7 +105,7 @@ public class MapManager : MonoBehaviour {
 	void Update () {
 
         HandleOnMarioDead();
-        EnoughCoinsCollectedHnadler();
+        EnoughCoinsCollectedHandler();
 
     }
 
@@ -111,6 +114,7 @@ public class MapManager : MonoBehaviour {
 
     //************SET************
     public void CreateMap(E_MAP_ID _id) {
+        coinsCollected = 0;
 
         DeleteMap();
         cameraShader.ResetEntityShaders();
@@ -148,7 +152,7 @@ public class MapManager : MonoBehaviour {
 
         //PLACE CAMERA
         Camera.main.transform.position = new Vector3(marioRefrence.transform.position.x, 5, Camera.main.transform.position.z);
-        if (currentMap == E_MAP_ID.UNDERGROUND_MAP || currentMap == E_MAP_ID.CLOUD_MAP || currentMap == E_MAP_ID.ALL_COINS_START)
+        if (currentMap == E_MAP_ID.UNDERGROUND_MAP || currentMap == E_MAP_ID.CLOUD_MAP || currentMap == E_MAP_ID.ALL_COINS_START || currentMap == E_MAP_ID.ALL_COINS_UNDERGROUND)
             Camera.main.backgroundColor = new Color32(0, 0, 20, 255);
 
         //IF CLOUD_MAP -> ADD FINAL BOSS ENTITY
@@ -328,8 +332,7 @@ public class MapManager : MonoBehaviour {
 
 
 
-    public void EnoughCoinsCollectedHnadler() {
-        Debug.Log(coinsCollected);
+    public void EnoughCoinsCollectedHandler() {
         if (currentMap == E_MAP_ID.START_MAP && coinsCollected > 14 && princessState == E_PRINCESS_STATE.DEAD)
         {
             CreateMap(E_MAP_ID.ALL_COINS_START);

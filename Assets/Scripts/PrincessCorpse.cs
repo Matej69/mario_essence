@@ -29,6 +29,8 @@ public class PrincessCorpse : ResponsiveEntity {
 	
 	// Update is called once per frame
 	void Update () {
+
+        Debug.Log(mapManager.princessState);
 	
 	}
 
@@ -37,19 +39,19 @@ public class PrincessCorpse : ResponsiveEntity {
     void SetProperSprite() {
         if (mapManager.princessState == MapManager.E_PRINCESS_STATE.ALIVE)
             GetComponent<SpriteRenderer>().sprite = null;
-        if (mapManager.princessState == MapManager.E_PRINCESS_STATE.DYING)
-            if (mapManager.princessDeathSpriteID + 1 < deathSprites.Length) {
-                GetComponent<SpriteRenderer>().sprite = deathSprites[++mapManager.princessDeathSpriteID];
-                }
-            else {
-                mapManager.princessState = MapManager.E_PRINCESS_STATE.DEAD;
 
+        if (mapManager.princessState == MapManager.E_PRINCESS_STATE.DYING)
+            if (mapManager.princessDeathSpriteID + 1 < deathSprites.Length)
+            {
+                GetComponent<SpriteRenderer>().sprite = deathSprites[++mapManager.princessDeathSpriteID];
             }
-        if (mapManager.princessState == MapManager.E_PRINCESS_STATE.DEAD) {
-            GetComponent<SpriteRenderer>().sprite = null;
-            /*
-            DO SHIT HERE
-            */
+            else if (mapManager.princessDeathSpriteID + 1 == deathSprites.Length)
+            {
+                GetComponent<SpriteRenderer>().sprite = deathSprites[mapManager.princessDeathSpriteID];
+            }
+
+        if (mapManager.princessState == MapManager.E_PRINCESS_STATE.DEAD && mapManager.princessJumpscareTriggered) {
+            GetComponent<SpriteRenderer>().sprite = null;        
 
         }
     }
@@ -67,6 +69,8 @@ public class PrincessCorpse : ResponsiveEntity {
         if (mapManager.princessDeathSpriteID > 5 && !isEssenceSpawned && mapManager.princessState != MapManager.E_PRINCESS_STATE.DEAD) { 
             Instantiate(EssenceJumpscarePrefab, transform.position, Quaternion.identity);
             isEssenceSpawned = true;
+            mapManager.princessJumpscareTriggered = true;
+            mapManager.princessState = MapManager.E_PRINCESS_STATE.DEAD;
         }
     }
 

@@ -124,7 +124,7 @@ public class Mario : MonoBehaviour {
 
     //***************HANDLERS*************
     public void ApplyGravity() {
-        velocity.y -= gravity;
+        velocity.y -= gravity * Time.deltaTime;
     }
 
     public void ApplyMovement() {
